@@ -1,9 +1,12 @@
 import express from 'express';
+import path from 'path';
 
 const app = express();
 
 app.get('/', (req, res) => {
-    res.send("Welcome to express");
+    // res.send("Welcome to express");
+    const pathlocation = path.resolve();
+    res.sendFile(path.join(pathlocation, './index.html'));
 })
 
 app.listen(5000, () => {
