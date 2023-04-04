@@ -1,7 +1,11 @@
 import express from 'express';
 
-const server = express();
+const app = express();
 
-server.listen(5000, () => {
+app.get('/', (req, res) => {
+    res.send("Welcome to express");
+})
+
+app.listen(5000, () => {
     console.log('listening on port');
 });
