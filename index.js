@@ -1,12 +1,14 @@
 // const http = require('http');
 // const gfName = require('./feature')
 import http from 'http'
-import gfName from './feature.js'
-import { gfName1,gfName2 } from './feature.js';
+import gfName, { gfName1, gfName2 } from './feature.js'
+import fs from 'fs'
 
 console.log(gfName);
 console.log(gfName1);
 console.log(gfName2);
+
+
 
 const server = http.createServer((req, res) => {
     if(req.url === '/about') {
@@ -16,7 +18,10 @@ const server = http.createServer((req, res) => {
         res.end('<h1>Contact page</h>');
     }
     else if(req.url === '/') {
-        res.end('<h1>Home page</h1>');
+        fs.readFile("./index.html", function(err, data){
+            res.end(data);
+        })
+        
     }
     else{
         res.end('<h1>Page not found</h1>');
