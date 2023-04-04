@@ -1,5 +1,7 @@
-const http = require('http');
-const gfName = require('./feature')
+// const http = require('http');
+// const gfName = require('./feature')
+import http from 'http'
+import gfName from './feature.js'
 
 console.log(gfName);
 

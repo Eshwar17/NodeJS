@@ -1,3 +1,4 @@
 const gfName = "MrsRandom"
 
-module.exports = gfName;
+// module.exports = gfName;
+export default gfName;
