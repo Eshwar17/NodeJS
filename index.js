@@ -8,7 +8,7 @@ console.log(gfName);
 console.log(gfName1);
 console.log(gfName2);
 
-
+const home = fs.readFileSync("./index.html");
 
 const server = http.createServer((req, res) => {
     if(req.url === '/about') {
@@ -18,10 +18,10 @@ const server = http.createServer((req, res) => {
         res.end('<h1>Contact page</h>');
     }
     else if(req.url === '/') {
-        fs.readFile("./index.html", function(err, data){
-            res.end(data);
-        })
-        
+        // fs.readFile("./index.html", function(err, data){
+        //     res.end(data);
+        // })
+        res.end(home);
     }
     else{
         res.end('<h1>Page not found</h1>');
