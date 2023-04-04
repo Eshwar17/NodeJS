@@ -2,8 +2,11 @@
 // const gfName = require('./feature')
 import http from 'http'
 import gfName from './feature.js'
+import { gfName1,gfName2 } from './feature.js';
 
 console.log(gfName);
+console.log(gfName1);
+console.log(gfName2);
 
 const server = http.createServer((req, res) => {
     if(req.url === '/about') {
