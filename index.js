@@ -1,8 +1,8 @@
 import express from 'express';
 import path from 'path';
 import mongoose from 'mongoose';
-import cookieParser from 'cookie-parser'
-
+import cookieParser from 'cookie-parser';
+import jwt from 'jsonwebtoken';
 
 mongoose.connect("mongodb://127.0.0.1:27017",{
     dbName: 'backend',
@@ -27,9 +27,11 @@ app.use(cookieParser());
 //setting up view engine
 app.set("view engine","ejs");
 
-const isAuthenticated = (req, res, next) => {
+const isAuthenticated = async (req, res, next) => {
     const {token} = req.cookies;
     if(token) {
+        const decoded = jwt.verify(token, 'qwertyuio');
+        req.user = await User.findById(decoded._id);
         next();
     }else{
         res.render('login');
@@ -49,7 +51,7 @@ app.get('/',isAuthenticated, (req, res) => {
     // }else{
     //     res.render('login');
     // }
-    res.render('logout');
+    res.render('logout',{name: req.user.name});
 })
 
 app.post('/login',async (req, res) => {
@@ -60,7 +62,11 @@ app.post('/login',async (req, res) => {
         name,
         email,
     });
-    res.cookie('token', user._id, {
+
+    //jwt token creation
+    const token = jwt.sign({_id: user._id},'qwertyuio');
+
+    res.cookie('token', token, {
         httpOnly: true,
     });
     res.redirect('/');
