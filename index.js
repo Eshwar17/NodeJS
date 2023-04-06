@@ -27,19 +27,29 @@ app.use(cookieParser());
 //setting up view engine
 app.set("view engine","ejs");
 
-app.get('/', (req, res) => {
+const isAuthenticated = (req, res, next) => {
+    const {token} = req.cookies;
+    if(token) {
+        next();
+    }else{
+        res.render('login');
+    }
+};
+
+app.get('/',isAuthenticated, (req, res) => {
     // res.send("Welcome to express");
     // const pathlocation = path.resolve();
     // res.sendFile(path.join(pathlocation, './index.html'));
 
     // res.render('index.ejs');
     // console.log(req.cookies);
-    const { token } = req.cookies;
-    if(token) {
-        res.render('logout');
-    }else{
-        res.render('login');
-    }
+    // const { token } = req.cookies;
+    // if(token) {
+    //     res.render('logout');
+    // }else{
+    //     res.render('login');
+    // }
+    res.render('logout');
 })
 
 app.post('/login', (req, res) => {
