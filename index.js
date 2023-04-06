@@ -1,6 +1,7 @@
 import express from 'express';
 import path from 'path';
 import mongoose from 'mongoose';
+import cookieParser from 'cookie-parser'
 
 
 mongoose.connect("mongodb://127.0.0.1:27017",{
@@ -21,6 +22,7 @@ const app = express();
 app.use(express.static(path.join(path.resolve(),'public')));
 //middleware to see data
 app.use(express.urlencoded({extended: true}));
+app.use(cookieParser());
 
 //setting up view engine
 app.set("view engine","ejs");
@@ -31,9 +33,29 @@ app.get('/', (req, res) => {
     // res.sendFile(path.join(pathlocation, './index.html'));
 
     // res.render('index.ejs');
-    res.render('index', {name: 'Eshwar'});
-
+    // console.log(req.cookies);
+    const { token } = req.cookies;
+    if(token) {
+        res.render('logout');
+    }else{
+        res.render('login');
+    }
 })
+
+app.post('/login', (req, res) => {
+    res.cookie('token', 'iamin', {
+        httpOnly: true,
+    });
+    res.redirect('/');
+})
+
+app.get('/logout', (req, res) => {
+    res.cookie('token', null, {
+        httpOnly: true,
+        expires: new Date(Date.now()),
+    });
+    res.redirect('/');
+});
 
 app.get('/add', async (req, res) => {
     await Message.create({
