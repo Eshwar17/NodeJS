@@ -9,12 +9,12 @@ mongoose.connect("mongodb://127.0.0.1:27017",{
 }).then(() => console.log('Database connected')).catch((e) => console.log(e));
 
 
-const messageSchema = new mongoose.Schema({
+const userSchema = new mongoose.Schema({
     name: String,
     email: String,
 });
 
-const Message = mongoose.model('Message', messageSchema);
+const User = mongoose.model('User', userSchema);
 
 const app = express();
 
@@ -52,8 +52,15 @@ app.get('/',isAuthenticated, (req, res) => {
     res.render('logout');
 })
 
-app.post('/login', (req, res) => {
-    res.cookie('token', 'iamin', {
+app.post('/login',async (req, res) => {
+    // console.log(req.body);
+    const { name, email} = req.body;
+
+    const user = await User.create({
+        name,
+        email,
+    });
+    res.cookie('token', user._id, {
         httpOnly: true,
     });
     res.redirect('/');
@@ -67,22 +74,24 @@ app.get('/logout', (req, res) => {
     res.redirect('/');
 });
 
-app.get('/add', async (req, res) => {
-    await Message.create({
-        name:"Eshwar1",
-        email:'sample1@example.com',
-    })
-    res.send('Nice');
-})
-app.get('/success', (req, res) => {
-    res.render('success');
-})
-app.post('/',async (req, res) => {
-    const messageBody = {name: req.body.name, email: req.body.email};
-    console.log(messageBody);
-    await Message.create(messageBody);
-    res.redirect('/success');
-})
+
+
+// app.get('/add', async (req, res) => {
+//     await Message.create({
+//         name:"Eshwar1",
+//         email:'sample1@example.com',
+//     })
+//     res.send('Nice');
+// })
+// app.get('/success', (req, res) => {
+//     res.render('success');
+// })
+// app.post('/',async (req, res) => {
+//     const messageBody = {name: req.body.name, email: req.body.email};
+//     console.log(messageBody);
+//     await Message.create(messageBody);
+//     res.redirect('/success');
+// })
 
 app.listen(5000, () => {
     console.log('listening on port');
